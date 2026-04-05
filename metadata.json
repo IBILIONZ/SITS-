@@ -1,0 +1,5 @@
+{
+  "name": "Student Information Tracing System (SITS)",
+  "description": "A comprehensive student information tracking system for ESAE-BENIN University, featuring student management, course enrollment, attendance tracking, and result computation.",
+  "requestFramePermissions": []
+}

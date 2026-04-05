@@ -1,0 +1,116 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the system (Admin, Lecturer, or Student).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email", "description": "User's email address" },
+        "role": { "type": "string", "enum": ["admin", "lecturer", "student"], "description": "User's role in the system" },
+        "displayName": { "type": "string", "description": "User's full name" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Department": {
+      "title": "Department",
+      "description": "An academic department within the university.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the department" }
+      },
+      "required": ["name"]
+    },
+    "AcademicSession": {
+      "title": "Academic Session",
+      "description": "An academic year or semester.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the session (e.g., 2024/2025 First Semester)" },
+        "current": { "type": "boolean", "description": "Whether this is the current active session" }
+      },
+      "required": ["name", "current"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "A student record linked to a user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Reference to User UID" },
+        "email": { "type": "string", "format": "email", "description": "Student's email address" },
+        "matricNo": { "type": "string", "description": "Unique matriculation number" },
+        "firstName": { "type": "string", "description": "Student's first name" },
+        "lastName": { "type": "string", "description": "Student's last name" },
+        "gender": { "type": "string", "enum": ["Male", "Female"], "description": "Student's gender" },
+        "deptId": { "type": "string", "description": "Reference to Department ID" },
+        "level": { "type": "string", "description": "Current level (e.g., 100L, 200L)" },
+        "admissionYear": { "type": "string", "description": "Year of admission" },
+        "status": { "type": "string", "enum": ["Active", "Inactive"], "description": "Account status" }
+      },
+      "required": ["userId", "email", "matricNo", "firstName", "lastName", "deptId", "level"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "An academic course offered by a department.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "description": "Course code (e.g., CS101)" },
+        "title": { "type": "string", "description": "Course title" },
+        "units": { "type": "number", "description": "Credit units" },
+        "deptId": { "type": "string", "description": "Reference to Department ID" },
+        "level": { "type": "string", "description": "Level the course is offered at" },
+        "lecturerId": { "type": "string", "description": "Reference to Lecturer User UID" }
+      },
+      "required": ["code", "title", "units", "deptId", "level"]
+    },
+    "Enrollment": {
+      "title": "Enrollment",
+      "description": "A student's enrollment in a course for a specific session.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "description": "Reference to Student ID" },
+        "courseId": { "type": "string", "description": "Reference to Course ID" },
+        "sessionId": { "type": "string", "description": "Reference to AcademicSession ID" }
+      },
+      "required": ["studentId", "courseId", "sessionId"]
+    },
+    "Attendance": {
+      "title": "Attendance",
+      "description": "A student's attendance record for a course on a specific date.",
+      "type": "object",
+      "properties": {
+        "courseId": { "type": "string", "description": "Reference to Course ID" },
+        "studentId": { "type": "string", "description": "Reference to Student ID" },
+        "date": { "type": "string", "format": "date", "description": "Date of the lecture" },
+        "status": { "type": "string", "enum": ["Present", "Absent", "Excused"], "description": "Attendance status" }
+      },
+      "required": ["courseId", "studentId", "date", "status"]
+    },
+    "Result": {
+      "title": "Result",
+      "description": "A student's academic result for a course in a specific session.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "description": "Reference to Student ID" },
+        "courseId": { "type": "string", "description": "Reference to Course ID" },
+        "sessionId": { "type": "string", "description": "Reference to AcademicSession ID" },
+        "caScore": { "type": "number", "description": "Continuous Assessment score (max 30)" },
+        "examScore": { "type": "number", "description": "Examination score (max 70)" },
+        "totalScore": { "type": "number", "description": "Total score (CA + Exam)" },
+        "grade": { "type": "string", "description": "Letter grade (A, B, C, D, F)" },
+        "point": { "type": "number", "description": "Grade point (4.0, 3.0, etc.)" }
+      },
+      "required": ["studentId", "courseId", "sessionId", "caScore", "examScore", "totalScore", "grade", "point"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": { "schema": "User", "description": "User profiles" },
+    "/departments/{deptId}": { "schema": "Department", "description": "University departments" },
+    "/academic_sessions/{sessionId}": { "schema": "AcademicSession", "description": "Academic sessions" },
+    "/students/{studentId}": { "schema": "Student", "description": "Student records" },
+    "/courses/{courseId}": { "schema": "Course", "description": "Course catalog" },
+    "/enrollments/{enrollmentId}": { "schema": "Enrollment", "description": "Course enrollments" },
+    "/attendance/{attendanceId}": { "schema": "Attendance", "description": "Attendance records" },
+    "/results/{resultId}": { "schema": "Result", "description": "Academic results" }
+  }
+}
